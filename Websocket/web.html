@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head><title>WebSocket</title></head>
+  <body>
+    <script>
+      var red=0, black=0;
+      var tcurr, tprev;
+      tprev = new Date().getTime();
+      var ws = new WebSocket("ws://localhost:11111/"),
+          messages = document.createElement('ul');
+      ws.onmessage = function (event) {
+        tcurr = new Date().getTime();
+        var diff = tcurr - tprev;
+        tprev = tcurr;
+        var messages = document.getElementsByTagName('ul')[0],
+        message = document.createElement('li'),
+        content = document.createTextNode(event.data + ' ' + diff);
+        if(diff < 2000) {
+          message.style.color = '#FF0000'; 
+          red++;
+          console.log(red);
+      }
+        else {
+          message.style.color = '#000000'; 
+          black++;
+          console.log(black); 
+        }
+        message.appendChild(content);
+        messages.appendChild(message);
+        if(messages.childElementCount > 10){
+          messages.removeChild(messages.firstChild);
+        } 
+        document.getElementById("Red").innerHTML=red;
+        document.getElementById("Black").innerHTML=black;
+      };
+      document.body.appendChild(messages);
+    </script>
+   <span id="Black" style="font-size: 200px;color: black;"></span>
+   <span id="Red" style="margin-left:200px;font-size: 200px;color: red;"></span>
+  </body>
+</html>
